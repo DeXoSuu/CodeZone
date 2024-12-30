@@ -9,7 +9,7 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
     fetch('https://ipinfo.io/json?token=d59cbb833f4209')
         .then(response => response.json())
         .then(data => {
-            // Extraire les données de géolocalisation, y compris l'IP
+            // Extraire les données de géolocalisation, y compris l'IP de l'utilisateur
             const geolocationData = {
                 ip: data.ip || 'Non disponible',
                 hostname: data.hostname || 'Non disponible',
